@@ -7,10 +7,12 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/mongo', methods=['POST'])
 def mongoTest():
-    client = MongoClient('mongodb://localhost:27017/')
-    db = client.Lecture6
-    yonhap = db.restaurant
-    results = yonhap.find()
+    client = MongoClient('mongodb://localhost:27017/')#defalut host
+    db = client.flights#db name
+    collec = db.myCollection#collection name
+
+    pipeline = [{"$group":{"_id":"$agency", "dist":{"$sum":1}}}]
+    results = collec.aggregate(pipeline)
 
     client.close()
 
