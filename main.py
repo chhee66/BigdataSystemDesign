@@ -18,15 +18,15 @@ def mongodb():
     results1=collec.aggregate(pipeline)
     
     
-    #2번 쿼리: 전체 기간에서 월별 운항 횟수 -----------------------------------------------------------------------------------------------
+    #2번 쿼리: 항공사별 월간 운항 횟수 -----------------------------------------------------------------------------------------------
     years = ["2019", "2020", "2021", "2022", "2023"]
     months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
     results2 = []
 
     for year in years :
         for month in months :
-            pipeline = [{'$match' : {"date": {"$regex" : month + "/[0-9]{2}\/" + year }}}, {"$group":{"_id":"$date", "count":{"$sum":1}}}]
-    # query=collec.aggregate(pipeline)
+            pipeline = [{'$match' : {"date": {"$regex" : month + "/[0-9]{2}\/" + year }}}, {"$group":{"_id":"$agency", "count":{"$sum":1}}}, {'$sort':{'_id': 1}}]
+
             count = 0
             test = list(collec.aggregate(pipeline))
 
@@ -36,8 +36,8 @@ def mongodb():
             if count==0 :
                 continue
 
-            tmp = [year + '-' + month, count]
-            # print(tmp)
+            tmp = [year + '-' + month, test]
+
             results2.append(tmp)
     
     
