@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>Flights Information - Dashboard</title>
 
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -17,6 +17,10 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{{ url_for('static', filename='sb-admin-2.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 </head>
 
 <body id="page-top">
@@ -136,7 +140,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Monthly flights by Airline</h6>
                                     <div class="dropdown no-arrow">
                                       
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -153,44 +157,98 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- 흐물흐물 차트 -->
+                                <!-- 쿼리2:라인차트 -->
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-area">
-                                        <!-- <canvas id="myAreaChart"> -->
-                                        <p>happy flights!</p>
-                                        <!-- <p>쿼리1: 비행시간이 1.5이상 거리에서의 좌석 인기 순위</p>
-                                        {% for i in data1 %}
-                                            <p>좌석타입: {{i._id}}, 빈도: {{i.popular}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p>
-                                        <p>쿼리2: 전체 기간에서 월별 운항 횟수</p>
-                                        {% for i in data2 %}
-                                            <p>날짜: {{i[0]}}, 횟수: {{i[1]}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p>
-                                        <p>쿼리3: 항공사 별 총 비행거리</p>
-                                        {% for i in data3 %}
-                                            <p>항공사: {{i._id}}, 비행거리: {{i.dist}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p>
-                                        <p>쿼리4: 비즈니스 도착지 9곳 Count</p>
-                                        {% for i in data4.keys() %}
-                                            <p>{{i}}:{{data4.get(i)}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p>
-                                        <p>쿼리5: 가장 비행시간이 긴 승객 TOP5</p>
-                                        {% for i in data5 %}
-                                            <p>usercode: {{i._id}}, 총 시간: {{i.totalTime}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p>
-                                        <p>쿼리6: agency별 flightType 이용 횟수</p>
-                                        {% for i in data6 %}
-                                            <p>agency: {{i[0]}}, 좌석: {{i[1]}}</p>
-                                        {% endfor %}
-                                        <p>------------------------------------------------------</p> 
-                        -->
-                                        <!-- </canvas> -->
+                                    <div class="card" style="margin-bottom: 0px;">
+                                        <div id="chartdiv" style="width:100%; height:500px"></div> 
+                                        
+                                        <script>
+                                            let data2 = {{ data2 | tojson}};
+                                            var dataSize = {{ data2 | length}};
+                                            console.log(data2);
+
+                                            am4core.ready(function () {
+                                                // Themes begin
+                                                am4core.useTheme(am4themes_animated);
+                                                // Themes end
+
+                                                var chart = am4core.create("chartdiv", am4charts.XYChart);
+                                                var chartData = [];
+
+                                                for (var i = 0; i < dataSize; i++) {
+                                                    var date = new Date(data2[i][0]);
+                                                    chartData.push({ month: date, CloudFy: data2[i][1][0]['count'], FlyingDrops: data2[i][1][1]['count'], Rainbow: data2[i][1][2]['count'] });
+                                                }
+
+                                                chart.data = chartData
+
+                                                chart.dateFormatter.inputDateFormat = "MM";
+                                                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                                                dateAxis.renderer.minGridDistance = 100;
+                                                dateAxis.startLocation = 0.5;
+                                                dateAxis.endLocation = 0.5;
+                                                dateAxis.baseInterval = {
+                                                    timeUnit: "month",
+                                                    count: 1
+                                                }
+
+                                                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                                                valueAxis.tooltip.disabled = true;
+
+                                                var series = chart.series.push(new am4charts.LineSeries());
+                                                series.dataFields.dateX = "month";
+                                                series.name = "CloudFy";
+                                                series.dataFields.valueY = "CloudFy";
+                                                series.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+
+                                                series.tooltip.background.fill = am4core.color("#FFF");
+                                                series.tooltip.getStrokeFromObject = true;
+                                                series.tooltip.background.strokeWidth = 3;
+                                                series.tooltip.getFillFromObject = false;
+                                                series.fillOpacity = 0.6;
+                                                series.strokeWidth = 2;
+                                                series.stacked = true;
+
+                                                var series2 = chart.series.push(new am4charts.LineSeries());
+                                                series2.dataFields.dateX = "month";
+                                                series2.name = "FlyingDrops";
+                                                series2.dataFields.valueY = "FlyingDrops";
+                                                series2.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+                                                series2.tooltip.getFillFromObject = false;
+                                                series2.tooltip.getStrokeFromObject = true;
+                                                series2.tooltip.background.strokeWidth = 3;
+                                                series2.sequencedInterpolation = true;
+                                                series2.fillOpacity = 0.6;
+                                                series2.stacked = true;
+                                                series2.strokeWidth = 2;
+
+                                                var series3 = chart.series.push(new am4charts.LineSeries());
+                                                series3.dataFields.dateX = "month";
+                                                series3.name = "Rainbow";
+                                                series3.dataFields.valueY = "Rainbow";
+                                                series3.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+                                                series3.tooltip.background.fill = am4core.color("#FFF");
+                                                series3.tooltip.getFillFromObject = false;
+                                                series3.tooltip.getStrokeFromObject = true;
+                                                series3.tooltip.background.strokeWidth = 3;
+                                                series3.sequencedInterpolation = true;
+                                                series3.fillOpacity = 0.6;
+                                                series3.stacked = true;
+                                                series3.strokeWidth = 2;
+
+
+                                                chart.cursor = new am4charts.XYCursor();
+                                                chart.cursor.xAxis = dateAxis;
+                                                chart.scrollbarX = new am4core.Scrollbar();
+
+                                                // Add a legend
+                                                chart.legend = new am4charts.Legend();
+                                                chart.legend.position = "top";
+
+                                           }); // end am4core.ready()
+
+                                        </script>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +260,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">seat occupancy<br>(At a distance of 1 hour and 30 minutes or more)</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -219,21 +277,41 @@
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <!-- 파이차트 -->
-                                <div class="card-body">
+                                <!-- 쿼리1:파이차트-->
+                                <div class="card-body" style="width:100%; height:523px">
                                     <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
+                                        <canvas id="myPieChart" style="width:100%; height:350px"></canvas>
+                                        <script>
+                                            var data1 = {{data1 | tojson}}; 
+
+                                            var ctxP = document.getElementById("myPieChart").getContext('2d');
+                                            var myPieChart = new Chart(ctxP, {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: [data1[0]['_id'],data1[1]['_id'],data1[2]['_id']],
+                                                    datasets: [{
+                                                        data: [data1[0]['popular'],data1[1]['popular'],data1[2]['popular']],
+                                                        backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"],
+                                                        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870"]
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true
+                                                }
+                                            });
+                                        </script>
+
                                     </div>
                                     <div class="mt-4 text-center small">
-                                        <span class="mr-2">
+                                        <!-- <span class="mr-2">
                                             <i class="fas fa-circle text-primary"></i> Direct
                                         </span>
                                         <span class="mr-2">
                                             <i class="fas fa-circle text-success"></i> Social
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
+                                            <i class="fas fa-circle text-info"></i> Referral -->
+                                        <!-- </span> -->
                                     </div>
                                 </div>
                             </div>
@@ -249,106 +327,55 @@
                             <!-- Project Card Example -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Top 5 longest flight times</h6>
                                 </div>
-                                <!-- 막대그래프 -->
+                                <!-- 쿼리5:도넛차트 -->
                                 <div class="card-body">
-                                    <!-- <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myDoughnutChart" style="height:50vh; width:70vw"  ></canvas>
+                                            <script>
+                                                var data5 = {{data5 | tojson}};   
+
+                                                var ctxP = document.getElementById("myDoughnutChart").getContext('2d');
+                                                var myPieChart = new Chart(ctxP, {
+                                                    type: 'doughnut',
+                                                    data: {
+                                                        labels: [data5[0]['_id'],data5[1]['_id'],data5[2]['_id'],data5[3]['_id'],data5[4]['_id']],
+                                                        datasets: [{
+                                                            data: [data5[0]['totalTime'],data5[1]['totalTime'],data5[2]['totalTime'],data5[3]['totalTime'],data5[4]['totalTime']],
+                                                            backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C","#E8C0C0","#D4E9D7"],
+                                                            hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870","#C2B0E8","#F6F2C6"]
+                                                        }]
+                                                    },
+                                                    options: {
+                                                        responsive: true
+                                                    }
+                                                });
+                                            </script>
                                     </div>
-                                    <h4 class="small font-weight-bold">Sales Tracking <span
-                                            class="float-right">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Customer Database <span
-                                            class="float-right">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Payout Details <span
-                                            class="float-right">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Account Setup <span
-                                            class="float-right">Complete!</span></h4>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div> -->
                                 </div>
                             </div>
 
-                            <!-- Color System -->
+                            <!-- 쿼리3:텍스트 -->
                             <div class="row">
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-primary text-white shadow">
                                         <div class="card-body">
-                                            Primary
-                                            <div class="text-white-50 small">#4e73df</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[0]._id}} - Total distance: {{data3[0].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-success text-white shadow">
                                         <div class="card-body">
-                                            Success
-                                            <div class="text-white-50 small">#1cc88a</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[1]._id}} - Total distance: {{data3[1].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
-                                        <div class="card-body">
-                                            Info
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-danger text-white shadow">
                                         <div class="card-body">
-                                            Danger
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                            <div class="text-white-50 small">#5a5c69</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[2]._id}} - Total distance: {{data3[2].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
@@ -371,7 +398,7 @@
                                     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>     <!-- 차트 링크 -->
                                     <script>
                                         var data= {{data6|tojson}};
-                                        console.log(data[0][1][2]['count']);
+                                        //console.log(data[0][1][2]['count']);
                                         var ctx = document.getElementById('myChart');
                                         var myStackedChart = new Chart(ctx, {
                                             type: 'bar',
@@ -409,12 +436,6 @@
                                                     },
                                                     y: {
                                                         stacked: true,
-                                                        // ticks:{
-                                                        //     beginAtZero : false,
-                                                        //     min : 100,
-                                                        //     max : 50000,
-                                                        //     stepSize:20
-                                                        // },
                                                         suggestedMin : 38000
                                                     },
                                                 }

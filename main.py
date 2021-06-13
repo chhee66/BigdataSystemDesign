@@ -5,7 +5,6 @@ import pprint
 app = Flask(__name__)
 
 @app.route('/')
-#쿼리 3번 
 @app.route('/mongo', methods=['POST'])
 def mongodb():
     client = MongoClient('mongodb://localhost:27017/')#defalut host
@@ -19,15 +18,15 @@ def mongodb():
     results1=collec.aggregate(pipeline)
     
     
-    #2번 쿼리: 전체 기간에서 월별 운항 횟수 -----------------------------------------------------------------------------------------------
+    #2번 쿼리: 항공사별 월간 운항 횟수 -----------------------------------------------------------------------------------------------
     years = ["2019", "2020", "2021", "2022", "2023"]
     months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
     results2 = []
 
     for year in years :
         for month in months :
-            pipeline = [{'$match' : {"date": {"$regex" : month + "/[0-9]{2}\/" + year }}}, {"$group":{"_id":"$date", "count":{"$sum":1}}}]
-    # query=collec.aggregate(pipeline)
+            pipeline = [{'$match' : {"date": {"$regex" : month + "/[0-9]{2}\/" + year }}}, {"$group":{"_id":"$agency", "count":{"$sum":1}}}, {'$sort':{'_id': 1}}]
+
             count = 0
             test = list(collec.aggregate(pipeline))
 
@@ -37,13 +36,14 @@ def mongodb():
             if count==0 :
                 continue
 
-            tmp = [year + '-' + month, count]
-            # print(tmp)
+            tmp = [year + '-' + month, test]
+
             results2.append(tmp)
     
     
     #3번 쿼리: 항공사 별 총 비행거리----------------------------------------------------------------------------
     pipeline = [{"$group":{"_id":"$agency", "dist":{"$sum":"$distance"}}}]
+    
     results3 = collec.aggregate(pipeline)
 
     
@@ -65,6 +65,7 @@ def mongodb():
     results5=collec.aggregate(pipeline)
 
 
+
     #6번 쿼리: agency별 flightType 이용 횟수--------------------------------------------------------------------
     pipeline = [{'$group':{'_id':'$agency'}}]
     agency = list(collec.aggregate(pipeline)) # [{'_id': 'Rainbow'}, {'_id': 'FlyingDrops'}, {'_id': 'CloudFy'}]
@@ -81,10 +82,11 @@ def mongodb():
 
         results6.append(tmp)
 
+
     # ----------------------------------------------------------------------------------------------------------
     client.close()
     #rendering
-    return render_template('mongo.html', data1=results1, data2=results2, data3=results3, data4=results4, data5=results5, data6=list(results6))
+    return render_template('mongo.html', data1=list(results1), data2=results2, data3=list(results3), data4=results4, data5=list(results5), data6=results6)
     
 if __name__ == '__main__':
     app.run(debug=True)
