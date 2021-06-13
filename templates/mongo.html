@@ -159,7 +159,7 @@
                                 <div class="card-body">
                                     <div class="chart-area">
                                         <!-- <canvas id="myAreaChart"> -->
-                                        <p>happy flights!</p>
+                                        <!-- <p>happy flights!</p>
                                         <p>쿼리1: 비행시간이 1.5이상 거리에서의 좌석 인기 순위</p>
                                         {% for i in data1 %}
                                             <p>좌석타입: {{i._id}}, 빈도: {{i.popular}}</p>
@@ -190,7 +190,7 @@
                                             <p>agency: {{i[0]}}, 좌석: {{i[1]}}</p>
                                         {% endfor %}
                                         <p>------------------------------------------------------</p> 
-                       
+                        -->
                                         <!-- </canvas> -->
                                     </div>
                                 </div>
@@ -220,21 +220,42 @@
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <!-- 파이차트 -->
+                                <!-- 파이차트:쿼리1-->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
+                                        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+                                        <script>
+                                            var data1 = {{data1 | tojson}};     
+                                            console.log(data1);               
+                                            var ctxP = document.getElementById("myPieChart").getContext('2d');
+                                            var myPieChart = new Chart(ctxP, {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: [data1[0]['_id'],data1[1]['_id'],data1[2]['_id']],
+                                                    datasets: [{
+                                                        data: [data1[0]['popular'],data1[1]['popular'],data1[2]['popular']],
+                                                        backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"],
+                                                        hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870"]
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true
+                                                }
+                                            });
+                                        </script>
+
                                     </div>
                                     <div class="mt-4 text-center small">
-                                        <span class="mr-2">
+                                        <!-- <span class="mr-2">
                                             <i class="fas fa-circle text-primary"></i> Direct
                                         </span>
                                         <span class="mr-2">
                                             <i class="fas fa-circle text-success"></i> Social
                                         </span>
                                         <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
+                                            <i class="fas fa-circle text-info"></i> Referral -->
+                                        <!-- </span> -->
                                     </div>
                                 </div>
                             </div>
@@ -287,69 +308,26 @@
                                 </div>
                             </div>
 
-                            <!-- Color System -->
+                            <!-- 순위텍스트 쿼리3 -->
                             <div class="row">
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-primary text-white shadow">
                                         <div class="card-body">
-                                            Primary
-                                            <div class="text-white-50 small">#4e73df</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[0]._id}} - Total distance: {{data3[0].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-success text-white shadow">
                                         <div class="card-body">
-                                            Success
-                                            <div class="text-white-50 small">#1cc88a</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[1]._id}} - Total distance: {{data3[1].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
-                                        <div class="card-body">
-                                            Info
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
+                                <div class="col-lg-12 mb-4">
                                     <div class="card bg-danger text-white shadow">
                                         <div class="card-body">
-                                            Danger
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                            <div class="text-white-50 small">#5a5c69</div>
+                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[2]._id}} - Total distance: {{data3[2].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
