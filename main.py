@@ -67,16 +67,16 @@ def mongodb():
 
 
     #6번 쿼리: agency별 flightType 이용 횟수--------------------------------------------------------------------
-    pipeline = [{'$group':{'_id':'$agency'}}]
-    agency = list(collec.aggregate(pipeline)) # [{'_id': 'Rainbow'}, {'_id': 'FlyingDrops'}, {'_id': 'CloudFy'}]
+    pipeline = [{'$group':{'_id':'$agency'}}, {'$sort':{'_id': 1}}]
+    agency = list(collec.aggregate(pipeline)) # [{'_id': 'FlyingDrops'}, {'_id': 'CloudFy'}, {'_id': 'Rainbow'}]
     agencies = []
     results6 = []
 
     for i in range(len(agency)):
-        agencies.append(agency[i]['_id']) # ['Rainbow', 'FlyingDrops', 'CloudFy']
+        agencies.append(agency[i]['_id']) # ['FlyingDrops', 'CloudFy', 'Rainbow']
 
     for j in agencies:
-        pipeline = [{'$match':{'agency':j}}, {'$group':{'_id':'$flightType', 'count':{'$sum':1}}}]
+        pipeline = [{'$match':{'agency':j}}, {'$group':{'_id':'$flightType', 'count':{'$sum':1}}}, {'$sort':{'_id': 1}}]
         count = list(collec.aggregate(pipeline))
         tmp = [j, count]
 

@@ -53,8 +53,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Lines</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">about 270000</div>
+                                                Database</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Business Travel Information</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -71,8 +71,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Developer</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">INFJ</div>
+                                               Lines</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">about 270000 lines</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -118,8 +118,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Class</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Bigdata System Design</div>
+                                                Developers</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">[INFJ] 문재식 박초희 차송희</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -166,7 +166,6 @@
                                         <script>
                                             let data2 = {{ data2 | tojson}};
                                             var dataSize = {{ data2 | length}};
-                                            console.log(data2);
 
                                             am4core.ready(function () {
                                                 // Themes begin
@@ -291,7 +290,7 @@
                                                     labels: [data1[0]['_id'],data1[1]['_id'],data1[2]['_id']],
                                                     datasets: [{
                                                         data: [data1[0]['popular'],data1[1]['popular'],data1[2]['popular']],
-                                                        backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"],
+                                                        backgroundColor: ["#B1B3E6", "#F0C6E7", "#FBBEA3"],
                                                         hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870"]
                                                     }]
                                                 },
@@ -343,7 +342,7 @@
                                                         labels: [data5[0]['_id'],data5[1]['_id'],data5[2]['_id'],data5[3]['_id'],data5[4]['_id']],
                                                         datasets: [{
                                                             data: [data5[0]['totalTime'],data5[1]['totalTime'],data5[2]['totalTime'],data5[3]['totalTime'],data5[4]['totalTime']],
-                                                            backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C","#E8C0C0","#D4E9D7"],
+                                                            backgroundColor: ["#95C1F7", "#46BFBD", "#FDB45C","#E8C0C0","#D4E9D7"],
                                                             hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870","#C2B0E8","#F6F2C6"]
                                                         }]
                                                     },
@@ -384,8 +383,7 @@
                         </div>
 
                         <div class="col-lg-6 mb-4">
-
-                            <!-- Illustrations(Stack Horizonal Bat Chart) -->
+                            <!-- 쿼리6: 스택바 차트 -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Query #6</h6>
@@ -398,26 +396,27 @@
                                     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>     <!-- 차트 링크 -->
                                     <script>
                                         var data= {{data6|tojson}};
-                                        //console.log(data[0][1][2]['count']);
+                                        //console.log(data);
+
                                         var ctx = document.getElementById('myChart');
                                         var myStackedChart = new Chart(ctx, {
                                             type: 'bar',
                                             data: {
-                                                labels: [data[0][0], data[1][0], data[2][0]], //['CloudFy', 'Rainbow', 'FlyingDrops'],
+                                                labels: [data[0][0], data[2][0], data[1][0]], //['CloudFy', 'Rainbow', 'FlyingDrops'],
                                                 datasets: [
                                                     {
-                                                    label: data[0][1][0]['_id'],  //'firstClass'
-                                                    data: [data[0][1][2]['count'], data[2][1][2]['count'], data[1][1][0]['count']],
+                                                    label: data[0][1][1]['_id'],  //'firstClass'
+                                                    data: [data[0][1][1]['count'], data[2][1][1]['count'], data[1][1][0]['count']], //[38862, , 38758],
                                                     backgroundColor: 'rgba(255, 99, 132, 0.2)', //red
                                                     },
                                                     {
-                                                    label: data[0][1][1]['_id'], //'economic'
-                                                    data: [data[0][1][1]['count'], data[2][1][1]['count'], 38000], //[38656, 38810, 38000],
+                                                    label: data[0][1][2]['_id'], //'premium'
+                                                    data: [data[0][1][2]['count'], data[2][1][2]['count'], 38000], //[, , 38000],
                                                     backgroundColor: 'rgba(54, 162, 235, 0.2)', //blue
                                                     },
                                                     {
-                                                    label: data[0][1][2]['_id'], //'premium'
-                                                    data: [data[0][1][0]['count'], data[2][1][0]['count'], 38000], //[38860, 39144, 38000],
+                                                    label: data[0][1][0]['_id'], //'economic'
+                                                    data: [data[0][1][0]['count'], data[2][1][0]['count'], 38000], //[, , 38000],
                                                     backgroundColor: 'rgba(75, 192, 192, 0.2)', //green
                                                     },
                                                 ]
