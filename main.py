@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/mongo', methods=['POST'])
 def mongodb():
     client = MongoClient('mongodb://localhost:27017/')#defalut host
-    db = client.flights#db name
+    db = client.flights #db name
     collec = db.myCollection#collection name
     
     
