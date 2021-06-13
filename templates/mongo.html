@@ -17,6 +17,10 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{{ url_for('static', filename='sb-admin-2.min.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 </head>
 
@@ -137,7 +141,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">쿼리2</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Monthly flights by Airline</h6>
                                     <div class="dropdown no-arrow">
                                       
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -157,7 +161,97 @@
                                 <!-- 쿼리2:라인차트 -->
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    
+                                    <div class="card" style="margin-bottom: 0px;">
+                                        <div id="chartdiv" style="width:100%; height:500px"></div> 
+                                        
+                                        <script>
+                                            let data2 = {{ data2 | tojson}};
+                                            var dataSize = {{ data2 | length}};
+                                            console.log(data2);
+
+                                            am4core.ready(function () {
+                                                // Themes begin
+                                                am4core.useTheme(am4themes_animated);
+                                                // Themes end
+
+                                                var chart = am4core.create("chartdiv", am4charts.XYChart);
+                                                var chartData = [];
+
+                                                for (var i = 0; i < dataSize; i++) {
+                                                    var date = new Date(data2[i][0]);
+                                                    chartData.push({ month: date, CloudFy: data2[i][1][0]['count'], FlyingDrops: data2[i][1][1]['count'], Rainbow: data2[i][1][2]['count'] });
+                                                }
+
+                                                chart.data = chartData
+
+                                                chart.dateFormatter.inputDateFormat = "MM";
+                                                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                                                dateAxis.renderer.minGridDistance = 100;
+                                                dateAxis.startLocation = 0.5;
+                                                dateAxis.endLocation = 0.5;
+                                                dateAxis.baseInterval = {
+                                                    timeUnit: "month",
+                                                    count: 1
+                                                }
+
+                                                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                                                valueAxis.tooltip.disabled = true;
+
+                                                var series = chart.series.push(new am4charts.LineSeries());
+                                                series.dataFields.dateX = "month";
+                                                series.name = "CloudFy";
+                                                series.dataFields.valueY = "CloudFy";
+                                                series.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+
+                                                series.tooltip.background.fill = am4core.color("#FFF");
+                                                series.tooltip.getStrokeFromObject = true;
+                                                series.tooltip.background.strokeWidth = 3;
+                                                series.tooltip.getFillFromObject = false;
+                                                series.fillOpacity = 0.6;
+                                                series.strokeWidth = 2;
+                                                series.stacked = true;
+
+                                                var series2 = chart.series.push(new am4charts.LineSeries());
+                                                series2.dataFields.dateX = "month";
+                                                series2.name = "FlyingDrops";
+                                                series2.dataFields.valueY = "FlyingDrops";
+                                                series2.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+                                                series2.tooltip.getFillFromObject = false;
+                                                series2.tooltip.getStrokeFromObject = true;
+                                                series2.tooltip.background.strokeWidth = 3;
+                                                series2.sequencedInterpolation = true;
+                                                series2.fillOpacity = 0.6;
+                                                series2.stacked = true;
+                                                series2.strokeWidth = 2;
+
+                                                var series3 = chart.series.push(new am4charts.LineSeries());
+                                                series3.dataFields.dateX = "month";
+                                                series3.name = "Rainbow";
+                                                series3.dataFields.valueY = "Rainbow";
+                                                series3.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b></span>";
+                                                series3.tooltip.background.fill = am4core.color("#FFF");
+                                                series3.tooltip.getFillFromObject = false;
+                                                series3.tooltip.getStrokeFromObject = true;
+                                                series3.tooltip.background.strokeWidth = 3;
+                                                series3.sequencedInterpolation = true;
+                                                series3.fillOpacity = 0.6;
+                                                series3.stacked = true;
+                                                series3.strokeWidth = 2;
+
+
+                                                chart.cursor = new am4charts.XYCursor();
+                                                chart.cursor.xAxis = dateAxis;
+                                                chart.scrollbarX = new am4core.Scrollbar();
+
+                                                // Add a legend
+                                                chart.legend = new am4charts.Legend();
+                                                chart.legend.position = "top";
+
+                                           }); // end am4core.ready()
+
+                                        </script>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -186,13 +280,12 @@
                                 </div>
                                 <!-- Card Body -->
                                 <!-- 쿼리1:파이차트-->
-                                <div class="card-body">
+                                <div class="card-body" style="width:100%; height:523px">
                                     <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+                                        <canvas id="myPieChart" style="width:100%; height:350px"></canvas>
                                         <script>
-                                            var data1 = {{data1 | tojson}};     
-                                            console.log(data1);               
+                                            var data1 = {{data1 | tojson}}; 
+
                                             var ctxP = document.getElementById("myPieChart").getContext('2d');
                                             var myPieChart = new Chart(ctxP, {
                                                 type: 'pie',
@@ -242,10 +335,9 @@
                                 <div class="card-body">
                                   <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myDoughnutChart" style="height:50vh; width:70vw"  ></canvas>
-                                            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
                                             <script>
-                                                var data5 = {{data5 | tojson}};     
-                                                console.log(data5);               
+                                                var data5 = {{data5 | tojson}};   
+
                                                 var ctxP = document.getElementById("myDoughnutChart").getContext('2d');
                                                 var myPieChart = new Chart(ctxP, {
                                                     type: 'doughnut',
