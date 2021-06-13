@@ -72,7 +72,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                Lines</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">about 270000 lines</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">about 270,000 lines</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -259,7 +259,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">seat occupancy<br>(At a distance of 1 hour and 30 minutes or more)</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Seat usage status<br>(At a distance of 1 hour and 30 minutes or more)</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -360,21 +360,21 @@
                                 <div class="col-lg-12 mb-4">
                                     <div class="card bg-primary text-white shadow">
                                         <div class="card-body">
-                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[0]._id}} - Total distance: {{data3[0].dist}} miles</p>
+                                                <p style="text-align: left; color: white; font-size: 20px;">Airline: {{data3[0]._id}} | Total distance: {{data3[0].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 mb-4">
                                     <div class="card bg-success text-white shadow">
                                         <div class="card-body">
-                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[1]._id}} - Total distance: {{data3[1].dist}} miles</p>
+                                                <p style="text-align:left; color: white; font-size: 20px;">Airline: {{data3[1]._id}} | Total distance: {{data3[1].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 mb-4">
                                     <div class="card bg-danger text-white shadow">
                                         <div class="card-body">
-                                                <p style="text-align: center; color: white; font-size: 20px;">Agency: {{data3[2]._id}} - Total distance: {{data3[2].dist}} miles</p>
+                                                <p style="text-align:left; color: white; font-size: 20px;">Airline: {{data3[2]._id}} | Total distance: {{data3[2].dist}} miles</p>
                                         </div>
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@
                             <!-- 쿼리6: 스택바 차트 -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Query #6</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Seat usage by airline</h6>
                                 </div>
                                 <div class="card-body">
                                 
@@ -443,18 +443,83 @@
                                     </script>
                                 </div>
                             </div>
-
+                            <!-- 쿼리4:도착지별 이용횟수 -->
                             <!-- Approach -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Popularity of business travel destinations</h6>
                                 </div>
                                 <div class="card-body">
-                                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                                        custom components and custom utility classes.</p>
-                                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                                        Bootstrap framework, especially the utility classes.</p>
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="mybarChart" style="width:100%; height:280px"></canvas>
+                                        <script>
+                                            var data = {{data4 | tojson}}; //9개
+                                        
+                                            var labels = Object.keys(data); //["Aracaju (SE)", "Brasilia (DF)", "Campo Grande (MS)", "Florianopolis (SC)", "Natal (RN)", "Recife (PE)", "Rio de Janeiro (RJ)", "Salvador (BH)", "Sao Paulo (SP)"]
+                                            var values = Object.values(data); //[37224, 30779, 34748, 57317, 23796, 30480, 16815, 17104, 23625]
+
+                                            var ctx = document.getElementById("mybarChart").getContext('2d');
+                                            var mybarChart = new Chart(ctx, {
+                                            type: 'line', // 차트의 형태
+                                            data: {
+                                                labels: labels,
+                                                datasets: [
+                                                    { //데이터
+                                                        label: ['Popularity'], //차트 제목
+                                                        fill: false, // line 형태일 때, 선 안쪽을 채우는지 안채우는지
+                                                        data: values,
+                                                        backgroundColor: [
+                                                            //색상
+                                                            'rgba(255, 99, 132, 0.2)',
+                                                            'rgba(54, 162, 235, 0.2)',
+                                                            'rgba(255, 206, 86, 0.2)',
+                                                            'rgba(75, 192, 192, 0.2)',
+                                                            'rgba(153, 102, 255, 0.2)',
+                                                            'rgba(255, 159, 64, 0.2)',
+                                                            'rgba(255, 99, 132, 0.2)',
+                                                            'rgba(54, 162, 235, 0.2)',
+                                                            'rgba(255, 206, 86, 0.2)'
+                                                        ],
+                                                        borderColor: [
+                                                            //경계선 색상
+                                                            'rgba(255, 99, 132, 1)',
+                                                            'rgba(54, 162, 235, 1)',
+                                                            'rgba(255, 206, 86, 1)',
+                                                            'rgba(75, 192, 192, 1)',
+                                                            'rgba(153, 102, 255, 1)',
+                                                            'rgba(255, 159, 64, 1)',
+                                                            'rgba(255, 99, 132, 1)',
+                                                            'rgba(54, 162, 235, 1)',
+                                                            'rgba(255, 206, 86, 1)'
+                                                        ],
+                                                        borderWidth: 1 //경계선 굵기
+                                                    }/* ,
+                                                    {
+                                                        label: 'test2',
+                                                        fill: false,
+                                                        data: [
+                                                            8, 34, 12, 24
+                                                        ],
+                                                        backgroundColor: 'rgb(157, 109, 12)',
+                                                        borderColor: 'rgb(157, 109, 12)'
+                                                    } */
+                                                ]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    yAxes: [
+                                                        {
+                                                            ticks: {
+                                                                beginAtZero: true
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        });
+                                        </script>
+
+                                    </div>
                                 </div>
                             </div>
 
@@ -471,7 +536,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; INFJ 2021</span>
                     </div>
                 </div>
             </footer>
