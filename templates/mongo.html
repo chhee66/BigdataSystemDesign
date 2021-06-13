@@ -17,7 +17,6 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{{ url_for('static', filename='sb-admin-2.min.css') }}">
-
 </head>
 
 <body id="page-top">
@@ -160,7 +159,7 @@
                                     <div class="chart-area">
                                         <!-- <canvas id="myAreaChart"> -->
                                         <p>happy flights!</p>
-                                        <p>쿼리1: 비행시간이 1.5이상 거리에서의 좌석 인기 순위</p>
+                                        <!-- <p>쿼리1: 비행시간이 1.5이상 거리에서의 좌석 인기 순위</p>
                                         {% for i in data1 %}
                                             <p>좌석타입: {{i._id}}, 빈도: {{i.popular}}</p>
                                         {% endfor %}
@@ -190,7 +189,7 @@
                                             <p>agency: {{i[0]}}, 좌석: {{i[1]}}</p>
                                         {% endfor %}
                                         <p>------------------------------------------------------</p> 
-                       
+                        -->
                                         <!-- </canvas> -->
                                     </div>
                                 </div>
@@ -359,22 +358,69 @@
 
                         <div class="col-lg-6 mb-4">
 
-                            <!-- Illustrations -->
+                            <!-- Illustrations(Stack Horizonal Bat Chart) -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Query #6</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="" alt="...">
-                                    </div>
-                                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!</p>
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                        unDraw &rarr;</a>
+                                
+                                    <!-- Stacked Bar Chart -->
+                                    <canvas id="myChart"></canvas>
+                                    <!-- <p>{{data6}}</p> -->
+                                    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>     <!-- 차트 링크 -->
+                                    <script>
+                                        var data= {{data6|tojson}};
+                                        console.log(data[0][1][2]['count']);
+                                        var ctx = document.getElementById('myChart');
+                                        var myStackedChart = new Chart(ctx, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: [data[0][0], data[1][0], data[2][0]], //['CloudFy', 'Rainbow', 'FlyingDrops'],
+                                                datasets: [
+                                                    {
+                                                    label: data[0][1][0]['_id'],  //'firstClass'
+                                                    data: [data[0][1][2]['count'], data[2][1][2]['count'], data[1][1][0]['count']],
+                                                    backgroundColor: 'rgba(255, 99, 132, 0.2)', //red
+                                                    },
+                                                    {
+                                                    label: data[0][1][1]['_id'], //'economic'
+                                                    data: [data[0][1][1]['count'], data[2][1][1]['count'], 38000], //[38656, 38810, 38000],
+                                                    backgroundColor: 'rgba(54, 162, 235, 0.2)', //blue
+                                                    },
+                                                    {
+                                                    label: data[0][1][2]['_id'], //'premium'
+                                                    data: [data[0][1][0]['count'], data[2][1][0]['count'], 38000], //[38860, 39144, 38000],
+                                                    backgroundColor: 'rgba(75, 192, 192, 0.2)', //green
+                                                    },
+                                                ]
+                                            },
+                                            options: {
+                                                plugins: {
+                                                title: {
+                                                    display: true,
+                                                    text: 'Chart.js Bar Chart - Stacked'
+                                                },
+                                                },
+                                                responsive: true,
+                                                scales: {
+                                                    x: {
+                                                        stacked: true,
+                                                    },
+                                                    y: {
+                                                        stacked: true,
+                                                        // ticks:{
+                                                        //     beginAtZero : false,
+                                                        //     min : 100,
+                                                        //     max : 50000,
+                                                        //     stepSize:20
+                                                        // },
+                                                        suggestedMin : 38000
+                                                    },
+                                                }
+                                            }
+                                            });
+                                    </script>
                                 </div>
                             </div>
 
@@ -398,7 +444,7 @@
                 </div>
                 <!-- /.container-fluid -->
 
-            </div>
+            </div>                                                                                                                                          
             <!-- End of Main Content -->
 
             <!-- Footer -->
@@ -441,8 +487,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

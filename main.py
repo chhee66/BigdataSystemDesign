@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route('/mongo', methods=['POST'])
 def mongodb():
     client = MongoClient('mongodb://localhost:27017/')#defalut host
-    db = client.flights#db name
+    db = client.flights #db name
     collec = db.myCollection#collection name
     
     
@@ -84,7 +84,7 @@ def mongodb():
     # ----------------------------------------------------------------------------------------------------------
     client.close()
     #rendering
-    return render_template('mongo.html', data1=results1, data2=results2, data3=results3, data4=results4, data5=results5, data6=results6)
+    return render_template('mongo.html', data1=results1, data2=results2, data3=results3, data4=results4, data5=results5, data6=list(results6))
     
 if __name__ == '__main__':
     app.run(debug=True)
