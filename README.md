@@ -6,6 +6,7 @@
 ![1](https://user-images.githubusercontent.com/44563011/121879502-e8f9f700-cd47-11eb-82a3-c1e88999cba6.JPG)   
 ![2](https://user-images.githubusercontent.com/44563011/121879508-ea2b2400-cd47-11eb-847b-06579fe0ec97.JPG)   
 
+## Spec 
 ### server: flask
 ### ide: vscode
 ### directory structure   
@@ -19,6 +20,7 @@ C:\[project_folder_name]
 └─templates   
         mongo.html      
            
+## Execution
 ### flight database - kaggle download   
 https://www.kaggle.com/leomauro/argodatathon2019     
 ![wwsegrf](https://user-images.githubusercontent.com/44563011/121776671-271cdc80-cbc9-11eb-870c-9803aa6bd048.JPG)    
