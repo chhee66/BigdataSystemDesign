@@ -1,7 +1,6 @@
 # BigdataSystemDesign
 2021 BigdataSystemDesign Final Project     
-충북대학교 소프트웨어학과    
-문재식 박초희 차송희     
+충북대학교 소프트웨어학과 박초희     
 ## results
 ![1](https://user-images.githubusercontent.com/44563011/121879502-e8f9f700-cd47-11eb-82a3-c1e88999cba6.JPG)   
 ![2](https://user-images.githubusercontent.com/44563011/121879508-ea2b2400-cd47-11eb-847b-06579fe0ec97.JPG)   
